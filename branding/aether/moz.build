@@ -1,0 +1,4 @@
+BRANDING_FILES += [
+    "brand.dtd",
+    "brand.properties",
+]

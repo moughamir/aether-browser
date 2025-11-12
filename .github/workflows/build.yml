@@ -1,0 +1,22 @@
+name: Build Aether Browser
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Rust & dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y python3 clang llvm mold cbindgen autoconf2.13 \
+            pkg-config libgtk-3-dev libdbus-glib-1-dev libasound2-dev \
+            libnss3-dev libnspr4-dev unzip zip
+          rustup default stable
+      - name: Build
+        run: |
+          ./mach bootstrap --application-choice=browser
+          ./mach build
