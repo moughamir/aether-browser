@@ -1,0 +1,21 @@
+# Aether Browser Chrome Manifest
+# This file registers Aether-specific chrome packages and overlays
+
+# Register Aether browser chrome
+content aether chrome/content/
+skin aether classic/1.0 chrome/skin/
+locale aether en-US chrome/locale/en-US/
+
+# Browser overlays for Aether customizations
+overlay chrome://browser/content/browser.xul chrome://aether/content/browser-overlay.xul
+
+# Preferences overlay
+overlay chrome://browser/content/preferences/preferences.xul chrome://aether/content/preferences-overlay.xul
+
+# Style overlays
+style chrome://global/content/customizeToolbar.xul chrome://aether/skin/browser.css
+
+# Component registration
+component {12345678-1234-1234-1234-123456789abc} components/AetherBrowserService.js
+contract @aether.browser/service;1 {12345678-1234-1234-1234-123456789abc}
+category profile-after-change AetherBrowserService @aether.browser/service;1

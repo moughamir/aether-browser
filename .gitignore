@@ -1,0 +1,157 @@
+# Aether Browser .gitignore
+# Based on Mozilla Firefox build system requirements
+
+# ===== BUILD ARTIFACTS =====
+# Object directories
+obj-*/
+obj/
+objdir/
+obj-x86_64-pc-linux-gnu/
+obj-aether/
+
+# Build outputs
+dist/
+_build/
+_tests/
+_virtualenv/
+
+# Compiled binaries
+*.exe
+*.dll
+*.so
+*.dylib
+*.a
+*.lib
+
+# ===== MOZILLA/FIREFOX SPECIFIC =====
+# mach state
+.mach_state/
+.mozbuild/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Test results
+_tests/
+testing/
+test-results/
+*.test
+*.log
+
+# Profiling data
+*.gcda
+*.gcno
+*.profdata
+
+# ===== DEVELOPMENT TOOLS =====
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Editor backups
+*.bak
+*.orig
+*.rej
+
+# ===== TEMPORARY FILES =====
+# System temporary files
+*.tmp
+*.temp
+.tmp/
+.temp/
+
+# Log files
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ===== DEPENDENCIES =====
+# Node.js
+node_modules/
+npm-debug.log
+yarn.lock
+package-lock.json
+
+# Python
+venv/
+env/
+.env
+.venv/
+pip-log.txt
+
+# ===== CONFIGURATION =====
+# Local configuration files
+.mozconfig.local
+mozconfig.local
+local.properties
+
+# Environment files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ===== ARCHIVES AND PACKAGES =====
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.zip
+*.rar
+*.7z
+*.dmg
+*.pkg
+*.deb
+*.rpm
+
+# ===== DOCUMENTATION BUILD =====
+docs/_build/
+docs/build/
+site/
+
+# ===== RUST (if used) =====
+target/
+Cargo.lock
+
+# ===== COVERAGE REPORTS =====
+coverage/
+.coverage
+.nyc_output/
+lcov.info
+
+# ===== SECURITY =====
+# Don't commit sensitive files
+*.key
+*.pem
+*.p12
+*.pfx
+secrets/
+.secrets/
+
+# ===== AETHER-SPECIFIC =====
+# Aether build artifacts
+aether-build/
+aether-dist/
+aether-*.tar.*
+
+# User data directories (for testing)
+profile-*/
+test-profile/
+aether-profile/
+
+# ===== KEEP THESE FILES =====
+# Force include important files that might be ignored by patterns above
+!.gitkeep
+!.gitignore
+!README.md
+!LICENSE
+!mozconfig

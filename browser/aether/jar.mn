@@ -1,0 +1,27 @@
+# Aether Browser JAR Manifest
+# This file defines how Aether browser files are packaged
+
+aether.jar:
+% content aether %content/
+% skin aether classic/1.0 %skin/
+% locale aether en-US %locale/en-US/
+% override chrome://browser/skin/browser.css chrome://aether/skin/browser.css
+% override chrome://browser/content/browser.js chrome://aether/content/browser.js
+
+# Content files
+  content/browser-overlay.xul                    (content/browser-overlay.xul)
+  content/browser.js                             (content/browser.js)
+  content/preferences-overlay.xul                (content/preferences-overlay.xul)
+  content/aether-commands.js                     (content/aether-commands.js)
+  content/aether-tabs.js                         (content/aether-tabs.js)
+
+# Skin files
+  skin/browser.css                               (skin/browser.css)
+  skin/aether-theme.css                          (skin/aether-theme.css)
+  skin/icons/                                    (skin/icons/)
+
+# Locale files
+  locale/en-US/browser.dtd                       (locale/en-US/browser.dtd)
+  locale/en-US/browser.properties                (locale/en-US/browser.properties)
+  locale/en-US/aether.dtd                        (locale/en-US/aether.dtd)
+  locale/en-US/aether.properties                 (locale/en-US/aether.properties)
