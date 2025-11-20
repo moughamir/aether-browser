@@ -1,3 +1,36 @@
 <!ENTITY brandShortName "Aether">
 <!ENTITY brandFullName "Aether Browser">
 <!ENTITY vendorShortName "Moughamir Labs">
+<!ENTITY brandProductName "Aether">
+
+<!-- Application title and window titles -->
+<!ENTITY mainWindow.title "&brandFullName;">
+<!ENTITY mainWindow.titlemodifier "&brandFullName;">
+<!ENTITY mainWindow.titlemodifiermenuseparator " - ">
+
+<!-- Trademark and copyright -->
+<!ENTITY trademarkInfo.part1 " ">
+
+<!-- About dialog -->
+<!ENTITY aboutDialog.title "About &brandFullName;">
+<!ENTITY aboutDialog.version "Version">
+
+<!-- Help menu -->
+<!ENTITY helpMenu.label "Help">
+<!ENTITY helpMenu.accesskey "H">
+<!ENTITY aboutProduct.label "About &brandShortName;">
+<!ENTITY aboutProduct.accesskey "A">
+
+<!-- Update notifications -->
+<!ENTITY update.checkingForUpdates "Checking for updates…">
+<!ENTITY update.noUpdatesFound "No updates found">
+<!ENTITY update.adminDisabled "Updates disabled by your system administrator">
+<!ENTITY update.otherInstanceHandlingUpdates "Another instance is handling updates">
+
+<!-- Preferences -->
+<!ENTITY preferencesCmd.label "Preferences">
+<!ENTITY preferencesCmd.accesskey "P">
+
+<!-- Privacy and security -->
+<!ENTITY privacy.label "Privacy &amp; Security">
+<!ENTITY security.label "Security">

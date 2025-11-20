@@ -1,0 +1,44 @@
+# Aether Browser Build Configuration
+# Based on Mozilla Firefox with Aether-specific customizations
+
+# Build a browser (not Thunderbird, etc.)
+ac_add_options --enable-application=browser
+
+# Branding
+ac_add_options --with-branding=branding/aether
+
+# Optimization settings
+ac_add_options --enable-optimize
+ac_add_options --disable-debug
+ac_add_options --disable-debug-symbols
+
+# Use system libraries where possible
+ac_add_options --enable-system-ffi
+ac_add_options --enable-system-pixman
+
+# Disable unnecessary features for minimal build
+ac_add_options --disable-tests
+ac_add_options --disable-crashreporter
+ac_add_options --disable-updater
+ac_add_options --disable-maintenance-service
+
+# Enable useful features for developers
+ac_add_options --enable-devtools
+
+# Use mold linker for faster builds (if available)
+export CC=clang
+export CXX=clang++
+export LD=mold
+
+# Build directory
+mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj-aether
+
+# Parallel build
+mk_add_options MOZ_MAKE_FLAGS="-j$(nproc)"
+
+# Aether-specific configurations
+ac_add_options --disable-default-browser-agent
+ac_add_options --disable-backgroundtasks
+
+# Privacy-focused defaults
+ac_add_options --disable-telemetry-reporting
