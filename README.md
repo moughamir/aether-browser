@@ -31,11 +31,22 @@ rustup default stable
 ```bash
 git clone https://github.com/moughamir/aether-browser.git
 cd aether-browser
+
+# Set up Firefox build infrastructure (first time only)
+./scripts/setup-firefox-build.sh
+
+# Bootstrap the build environment
+./mach bootstrap --application-choice=browser
+
+# Build and run
 ./scripts/build.sh
 ./scripts/run-dev.sh
 ```
 
-The build process uses [`scripts/build.sh`](scripts/build.sh) for compilation and [`scripts/run-dev.sh`](scripts/run-dev.sh) to launch the development version.
+The build process uses:
+- [`scripts/setup-firefox-build.sh`](scripts/setup-firefox-build.sh) to set up Firefox build infrastructure (one-time setup)
+- [`scripts/build.sh`](scripts/build.sh) for compilation
+- [`scripts/run-dev.sh`](scripts/run-dev.sh) to launch the development version
 
 ---
 
