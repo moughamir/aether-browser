@@ -1,0 +1,961 @@
+<repomix><file_summary>This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+The content has been processed where comments have been removed, empty lines have been removed, content has been formatted for parsing in xml style, content has been compressed (code blocks are separated by ⋮---- delimiter), security check has been disabled.<purpose>This file contains a packed representation of the entire repository&apos;s contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.</purpose><file_format>The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Repository files, each consisting of:
+  - File path as an attribute
+  - Full contents of the file</file_format><usage_guidelines>- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.</usage_guidelines><notes>- Some files may have been excluded based on .gitignore rules and Repomix&apos;s configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Code comments have been removed from supported file types
+- Empty lines have been removed from all files
+- Content has been formatted for parsing in xml style
+- Content has been compressed - code blocks are separated by ⋮---- delimiter
+- Security check has been disabled - content may contain sensitive information
+- Files are sorted by Git change count (files with more changes are at the bottom)</notes></file_summary><directory_structure>.github/
+  workflows/
+    build.yml
+branding/
+  aether/
+    brand.dtd
+    brand.properties
+    configure.sh
+    moz.build
+browser/
+  aether/
+    chrome.manifest
+    moz.build
+defaults/
+  pref/
+    aether.js
+scripts/
+  bootstrap.sh
+  build.sh
+  run-dev.sh
+  setup-firefox-build.sh
+src/
+  ai/
+    README.md
+  components/
+    README.md
+  themes/
+    README.md
+.gitignore
+LICENSE
+mozconfig
+README.md
+SCAFFOLD.md</directory_structure><files>This section contains the contents of the repository&apos;s files.<file path=".github/workflows/build.yml">name: Build Aether Browser
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Rust &amp; dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y python3 clang llvm mold cbindgen autoconf2.13 \
+            pkg-config libgtk-3-dev libdbus-glib-1-dev libasound2-dev \
+            libnss3-dev libnspr4-dev unzip zip
+          rustup default stable
+      - name: Build
+        run: |
+          ./mach bootstrap --application-choice=browser
+          ./mach build</file><file path="branding/aether/brand.dtd">&lt;!ENTITY brandShortName &quot;Aether&quot;&gt;
+&lt;!ENTITY brandFullName &quot;Aether Browser&quot;&gt;
+&lt;!ENTITY vendorShortName &quot;Moughamir Labs&quot;&gt;
+&lt;!ENTITY brandProductName &quot;Aether&quot;&gt;
+
+&lt;!-- Application title and window titles --&gt;
+&lt;!ENTITY mainWindow.title &quot;&amp;brandFullName;&quot;&gt;
+&lt;!ENTITY mainWindow.titlemodifier &quot;&amp;brandFullName;&quot;&gt;
+&lt;!ENTITY mainWindow.titlemodifiermenuseparator &quot; - &quot;&gt;
+
+&lt;!-- Trademark and copyright --&gt;
+&lt;!ENTITY trademarkInfo.part1 &quot; &quot;&gt;
+
+&lt;!-- About dialog --&gt;
+&lt;!ENTITY aboutDialog.title &quot;About &amp;brandFullName;&quot;&gt;
+&lt;!ENTITY aboutDialog.version &quot;Version&quot;&gt;
+
+&lt;!-- Help menu --&gt;
+&lt;!ENTITY helpMenu.label &quot;Help&quot;&gt;
+&lt;!ENTITY helpMenu.accesskey &quot;H&quot;&gt;
+&lt;!ENTITY aboutProduct.label &quot;About &amp;brandShortName;&quot;&gt;
+&lt;!ENTITY aboutProduct.accesskey &quot;A&quot;&gt;
+
+&lt;!-- Update notifications --&gt;
+&lt;!ENTITY update.checkingForUpdates &quot;Checking for updates…&quot;&gt;
+&lt;!ENTITY update.noUpdatesFound &quot;No updates found&quot;&gt;
+&lt;!ENTITY update.adminDisabled &quot;Updates disabled by your system administrator&quot;&gt;
+&lt;!ENTITY update.otherInstanceHandlingUpdates &quot;Another instance is handling updates&quot;&gt;
+
+&lt;!-- Preferences --&gt;
+&lt;!ENTITY preferencesCmd.label &quot;Preferences&quot;&gt;
+&lt;!ENTITY preferencesCmd.accesskey &quot;P&quot;&gt;
+
+&lt;!-- Privacy and security --&gt;
+&lt;!ENTITY privacy.label &quot;Privacy &amp;amp; Security&quot;&gt;
+&lt;!ENTITY security.label &quot;Security&quot;&gt;</file><file path="branding/aether/brand.properties">brandShortName=Aether
+brandFullName=Aether Browser
+vendorShortName=Moughamir Labs
+brandProductName=Aether
+
+# Application info
+appName=Aether
+appVersion=1.0.0
+buildID=20241114000000
+
+# Update and support URLs
+updateURL=
+supportURL=https://github.com/moughamir/aether-browser
+feedbackURL=https://github.com/moughamir/aether-browser/issues
+
+# Privacy policy and terms
+privacyPolicyURL=
+termsOfServiceURL=
+
+# Default homepage and search
+homePageURL=about:home
+searchEngineURL=
+
+# User agent
+userAgentProductName=Aether
+userAgentVendor=Moughamir Labs
+
+# Crash reporter
+crashReporterProductName=Aether
+crashReporterVendor=Moughamir Labs
+
+# Distribution info
+distributionID=aether
+distributionVersion=1.0.0
+
+# Branding specific
+brandingDirectory=aether
+brandingOfficialName=Aether Browser</file><file path="branding/aether/configure.sh">echo &quot;Applying Aether branding...&quot;
+cp -r browser/branding/aether/* browser/branding/unofficial/</file><file path="branding/aether/moz.build"># -*- Mode: python; indent-tabs-mode: nil; tab-width: 40 -*-
+# vim: set filetype=python:
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+# Aether Browser Branding Configuration
+
+BRANDING_FILES += [
+    &quot;brand.dtd&quot;,
+    &quot;brand.properties&quot;,
+]
+
+# Application icon files (when available)
+# BRANDING_FILES += [
+#     &quot;default16.png&quot;,
+#     &quot;default32.png&quot;,
+#     &quot;default48.png&quot;,
+#     &quot;default64.png&quot;,
+#     &quot;default128.png&quot;,
+#     &quot;firefox.ico&quot;,
+#     &quot;document.ico&quot;,
+# ]
+
+# macOS specific files (when available)
+# if CONFIG[&quot;MOZ_WIDGET_TOOLKIT&quot;] == &quot;cocoa&quot;:
+#     BRANDING_FILES += [
+#         &quot;background.png&quot;,
+#         &quot;disk.icns&quot;,
+#         &quot;document.icns&quot;,
+#         &quot;dsstore&quot;,
+#         &quot;firefox.icns&quot;,
+#     ]
+
+# Windows specific files (when available)
+# if CONFIG[&quot;OS_ARCH&quot;] == &quot;WINNT&quot;:
+#     BRANDING_FILES += [
+#         &quot;branding.nsi&quot;,
+#         &quot;wizHeader.bmp&quot;,
+#         &quot;wizHeaderRTL.bmp&quot;,
+#         &quot;wizWatermark.bmp&quot;,
+#     ]</file><file path="browser/aether/chrome.manifest"># Aether Browser Chrome Manifest
+# This file registers Aether-specific chrome packages and overlays
+
+# Register Aether browser chrome
+content aether chrome/content/
+skin aether classic/1.0 chrome/skin/
+locale aether en-US chrome/locale/en-US/
+
+# Browser overlays for Aether customizations
+overlay chrome://browser/content/browser.xul chrome://aether/content/browser-overlay.xul
+
+# Preferences overlay
+overlay chrome://browser/content/preferences/preferences.xul chrome://aether/content/preferences-overlay.xul
+
+# Style overlays
+style chrome://global/content/customizeToolbar.xul chrome://aether/skin/browser.css
+
+# Component registration
+component {12345678-1234-1234-1234-123456789abc} components/AetherBrowserService.js
+contract @aether.browser/service;1 {12345678-1234-1234-1234-123456789abc}
+category profile-after-change AetherBrowserService @aether.browser/service;1</file><file path="browser/aether/moz.build"># -*- Mode: python; indent-tabs-mode: nil; tab-width: 40 -*-
+# vim: set filetype=python:
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+# Aether Browser specific build configuration
+
+DIRS += [
+    &quot;components&quot;,
+    &quot;themes&quot;,
+]
+
+# Aether-specific JavaScript modules
+EXTRA_JS_MODULES += [
+    &quot;AetherBrowser.jsm&quot;,
+    &quot;AetherPreferences.jsm&quot;,
+    &quot;AetherUtils.jsm&quot;,
+]
+
+# Aether browser chrome files
+JAR_MANIFESTS += [&quot;jar.mn&quot;]
+
+# Include Aether-specific resources
+BROWSER_CHROME_MANIFESTS += [
+    &quot;chrome.manifest&quot;,
+]</file><file path="defaults/pref/aether.js">pref(&quot;browser.startup.homepage&quot;, &quot;about:blank&quot;);
+pref(&quot;browser.newtabpage.enabled&quot;, false);
+pref(&quot;browser.startup.page&quot;, 0);
+pref(&quot;browser.tabs.closeWindowWithLastTab&quot;, false);
+pref(&quot;browser.tabs.warnOnClose&quot;, false);
+pref(&quot;browser.tabs.warnOnCloseOtherTabs&quot;, false);
+pref(&quot;browser.tabs.warnOnOpen&quot;, false);
+pref(&quot;browser.tabs.loadInBackground&quot;, true);
+pref(&quot;privacy.trackingprotection.enabled&quot;, true);
+pref(&quot;privacy.trackingprotection.socialtracking.enabled&quot;, true);
+pref(&quot;privacy.donottrackheader.enabled&quot;, true);
+pref(&quot;privacy.clearOnShutdown.cache&quot;, true);
+pref(&quot;privacy.clearOnShutdown.cookies&quot;, false);
+pref(&quot;privacy.clearOnShutdown.history&quot;, false);
+pref(&quot;datareporting.healthreport.uploadEnabled&quot;, false);
+pref(&quot;datareporting.policy.dataSubmissionEnabled&quot;, false);
+pref(&quot;toolkit.telemetry.enabled&quot;, false);
+pref(&quot;toolkit.telemetry.unified&quot;, false);
+pref(&quot;toolkit.telemetry.archive.enabled&quot;, false);
+pref(&quot;experiments.supported&quot;, false);
+pref(&quot;experiments.enabled&quot;, false);
+pref(&quot;network.allow-experiments&quot;, false);
+pref(&quot;app.update.enabled&quot;, false);
+pref(&quot;app.update.auto&quot;, false);
+pref(&quot;extensions.update.enabled&quot;, false);
+pref(&quot;toolkit.legacyUserProfileCustomizations.stylesheets&quot;, true);
+pref(&quot;devtools.chrome.enabled&quot;, true);
+pref(&quot;devtools.debugger.remote-enabled&quot;, true);
+pref(&quot;devtools.theme&quot;, &quot;dark&quot;);
+pref(&quot;aether.devtools.enabled&quot;, true);
+pref(&quot;aether.commandPalette.enabled&quot;, true);
+pref(&quot;aether.treeTabs.enabled&quot;, true);
+pref(&quot;aether.ciel.integration&quot;, true);
+pref(&quot;aether.ai.enabled&quot;, false);
+pref(&quot;aether.customization.enabled&quot;, true);
+pref(&quot;aether.performance.optimized&quot;, true);
+pref(&quot;browser.search.suggest.enabled&quot;, false);
+pref(&quot;browser.urlbar.suggest.searches&quot;, false);
+pref(&quot;browser.urlbar.suggest.quicksuggest.sponsored&quot;, false);
+pref(&quot;browser.urlbar.suggest.quicksuggest.nonsponsored&quot;, false);
+pref(&quot;network.dns.disablePrefetch&quot;, true);
+pref(&quot;network.prefetch-next&quot;, false);
+pref(&quot;network.predictor.enabled&quot;, false);
+pref(&quot;media.autoplay.default&quot;, 5);
+pref(&quot;media.autoplay.blocking_policy&quot;, 2);
+pref(&quot;browser.cache.disk.enable&quot;, true);
+pref(&quot;browser.cache.memory.enable&quot;, true);
+pref(&quot;browser.sessionhistory.max_total_viewers&quot;, 4);
+pref(&quot;browser.toolbars.bookmarks.visibility&quot;, &quot;never&quot;);
+pref(&quot;browser.uidensity&quot;, 1);
+pref(&quot;layout.css.prefers-color-scheme.content-override&quot;, 0);</file><file path="scripts/bootstrap.sh">set -e
+SCRIPT_DIR=&quot;$(cd &quot;$(dirname &quot;${BASH_SOURCE[0]}&quot;)&quot; &amp;&amp; pwd)&quot;
+PROJECT_ROOT=&quot;$(dirname &quot;$SCRIPT_DIR&quot;)&quot;
+FIREFOX_VERSION=&quot;131.0.3&quot;
+echo &quot;🧭 Aether Browser Bootstrap&quot;
+echo &quot;==========================&quot;
+cd &quot;$PROJECT_ROOT&quot;
+if [ -f &quot;mach&quot; ] &amp;&amp; [ -d &quot;browser&quot; ]; then
+    echo &quot;✅ Firefox source already present&quot;
+else
+    echo &quot;📥 Downloading Firefox source code...&quot;
+    TEMP_DIR=$(mktemp -d)
+    cd &quot;$TEMP_DIR&quot;
+    echo &quot;Downloading Firefox $FIREFOX_VERSION source...&quot;
+    wget -q &quot;https://archive.mozilla.org/pub/firefox/releases/$FIREFOX_VERSION/source/firefox-$FIREFOX_VERSION.source.tar.xz&quot;
+    echo &quot;Extracting Firefox source...&quot;
+    tar -xf &quot;firefox-$FIREFOX_VERSION.source.tar.xz&quot;
+    echo &quot;Moving source files...&quot;
+    cd &quot;firefox-$FIREFOX_VERSION&quot;
+    rsync -av --exclude=&apos;.git&apos; --exclude=&apos;README.md&apos; --exclude=&apos;LICENSE&apos; \
+          --exclude=&apos;branding/aether&apos; --exclude=&apos;scripts&apos; --exclude=&apos;defaults&apos; \
+          --exclude=&apos;mozconfig&apos; . &quot;$PROJECT_ROOT/&quot;
+    cd &quot;$PROJECT_ROOT&quot;
+    rm -rf &quot;$TEMP_DIR&quot;
+    echo &quot;✅ Firefox source downloaded and extracted&quot;
+fi
+chmod +x scripts/*.sh
+echo &quot;🐍 Setting up Python environment...&quot;
+if command -v python3 &amp;&gt; /dev/null; then
+    python3 -m pip install --user --upgrade pip
+else
+    echo &quot;❌ Python 3 is required but not found&quot;
+    exit 1
+fi
+echo &quot;🔧 Running mach bootstrap...&quot;
+if [ -f &quot;mach&quot; ]; then
+    ./mach bootstrap --application-choice=browser --no-interactive
+else
+    echo &quot;❌ mach not found. Firefox source may not have been downloaded correctly.&quot;
+    exit 1
+fi
+echo &quot;&quot;
+echo &quot;✅ Aether Browser bootstrap complete!&quot;
+echo &quot;&quot;
+echo &quot;Next steps:&quot;
+echo &quot;  1. Run: ./scripts/build.sh&quot;
+echo &quot;  2. Run: ./scripts/run-dev.sh&quot;
+echo &quot;&quot;</file><file path="scripts/build.sh">set -e
+echo &quot;🔧 Bootstrapping Aether Browser build environment...&quot;
+cd &quot;$(dirname &quot;$0&quot;)/..&quot;
+if [ ! -d &quot;obj-x86_64-pc-linux-gnu&quot; ]; then
+  ./mach bootstrap --application-choice=browser
+fi
+./mach configure
+export LD=mold
+./mach build -j$(nproc)
+echo &quot;✅ Build complete! Run with ./scripts/run-dev.sh&quot;</file><file path="scripts/run-dev.sh">set -e
+cd &quot;$(dirname &quot;$0&quot;)/..&quot;
+./mach run --no-remote -P aether-dev</file><file path="scripts/setup-firefox-build.sh">set -e
+SCRIPT_DIR=&quot;$(cd &quot;$(dirname &quot;${BASH_SOURCE[0]}&quot;)&quot; &amp;&amp; pwd)&quot;
+PROJECT_ROOT=&quot;$(dirname &quot;$SCRIPT_DIR&quot;)&quot;
+echo &quot;🔥 Setting up Firefox build infrastructure for Aether Browser...&quot;
+echo &quot;Project root: $PROJECT_ROOT&quot;
+if ! command -v git &amp;&gt; /dev/null; then
+    echo &quot;❌ Git is required but not installed. Please install git first.&quot;
+    exit 1
+fi
+TEMP_DIR=$(mktemp -d)
+echo &quot;Using temporary directory: $TEMP_DIR&quot;
+cd &quot;$TEMP_DIR&quot;
+echo &quot;📥 Cloning Firefox build infrastructure (this may take a few minutes)...&quot;
+git clone --depth 1 https://github.com/mozilla/gecko-dev.git firefox-source
+cd firefox-source
+echo &quot;📋 Copying essential build files to Aether Browser...&quot;
+if [ -d &quot;build&quot; ]; then
+    echo &quot;Copying build system...&quot;
+    cp -r build &quot;$PROJECT_ROOT/&quot;
+fi
+if [ -d &quot;python&quot; ]; then
+    echo &quot;Copying Python build tools...&quot;
+    cp -r python &quot;$PROJECT_ROOT/&quot;
+fi
+if [ -d &quot;tools&quot; ]; then
+    echo &quot;Copying build tools...&quot;
+    cp -r tools &quot;$PROJECT_ROOT/&quot;
+fi
+if [ -f &quot;mach&quot; ]; then
+    echo &quot;Copying mach build script...&quot;
+    cp mach &quot;$PROJECT_ROOT/&quot;
+    chmod +x &quot;$PROJECT_ROOT/mach&quot;
+fi
+if [ -f &quot;moz.configure&quot; ]; then
+    echo &quot;Copying moz.configure...&quot;
+    cp moz.configure &quot;$PROJECT_ROOT/&quot;
+fi
+if [ -f &quot;configure.py&quot; ]; then
+    echo &quot;Copying configure.py...&quot;
+    cp configure.py &quot;$PROJECT_ROOT/&quot;
+fi
+for dir in config; do
+    if [ -d &quot;$dir&quot; ]; then
+        echo &quot;Copying $dir...&quot;
+        cp -r &quot;$dir&quot; &quot;$PROJECT_ROOT/&quot;
+    fi
+done
+echo &quot;🧹 Cleaning up temporary files...&quot;
+cd &quot;$PROJECT_ROOT&quot;
+rm -rf &quot;$TEMP_DIR&quot;
+echo &quot;✅ Firefox build infrastructure setup complete!&quot;
+echo &quot;&quot;
+echo &quot;Next steps:&quot;
+echo &quot;1. Run: ./mach bootstrap --application-choice=browser&quot;
+echo &quot;2. Configure your build with: ./mach configure&quot;
+echo &quot;3. Build Aether Browser with: ./mach build&quot;</file><file path="src/ai/README.md"># Aether AI Integration
+
+This directory will contain AI-powered features for Aether Browser.
+
+## Planned Features
+
+- **Smart Search**: AI-enhanced search suggestions and results
+- **Content Summarization**: Automatic page content summarization
+- **Translation**: Real-time page translation
+- **Privacy Assistant**: AI-powered privacy recommendations
+- **Developer Tools**: AI-assisted debugging and code analysis
+
+## Implementation Status
+
+🚧 **Under Development** - This module is planned for future releases.
+
+## Architecture
+
+```
+src/ai/
+├── core/           # Core AI functionality
+├── search/         # Search enhancement
+├── content/        # Content analysis and summarization
+├── privacy/        # Privacy-focused AI features
+└── devtools/       # Developer-focused AI tools
+```
+
+## Dependencies
+
+- TensorFlow.js or similar for client-side AI
+- WebAssembly for performance-critical operations
+- Privacy-preserving ML models</file><file path="src/components/README.md"># Aether Browser Components
+
+This directory contains custom UI components and browser features specific to Aether Browser.
+
+## Components
+
+### Command Palette
+- **Location**: `command-palette/`
+- **Description**: VS Code-style command palette for quick browser actions
+- **Status**: Planned
+
+### Tree Tabs
+- **Location**: `tree-tabs/`
+- **Description**: Hierarchical tab organization system
+- **Status**: Planned
+
+### Developer Tools
+- **Location**: `devtools/`
+- **Description**: Enhanced developer tools with Aether-specific features
+- **Status**: Planned
+
+### Customization Engine
+- **Location**: `customization/`
+- **Description**: Advanced browser customization system
+- **Status**: Planned
+
+## Architecture
+
+Each component follows the Mozilla extension architecture:
+- `manifest.json` - Component manifest
+- `background.js` - Background scripts
+- `content/` - Content scripts
+- `ui/` - User interface files
+- `locales/` - Internationalization files</file><file path="src/themes/README.md"># Aether Browser Themes
+
+This directory contains custom themes and styling for Aether Browser.
+
+## Theme Structure
+
+### Default Theme
+- **Location**: `default/`
+- **Description**: Clean, modern default theme for Aether Browser
+- **Features**: Dark/light mode support, accessibility optimized
+
+### Developer Theme
+- **Location**: `developer/`
+- **Description**: Developer-focused theme with enhanced debugging visuals
+- **Features**: Syntax highlighting, grid overlays, performance indicators
+
+## Files
+
+- `userChrome.css` - Browser UI styling
+- `userContent.css` - Web content styling
+- `variables.css` - Theme variables and colors
+- `components/` - Individual component styles
+
+## Customization
+
+Themes support CSS custom properties for easy customization:
+
+```css
+:root {
+  --aether-primary-color: #007acc;
+  --aether-background-color: #1e1e1e;
+  --aether-text-color: #ffffff;
+  --aether-accent-color: #ff6b35;
+}
+```</file><file path=".gitignore"># Aether Browser .gitignore
+# Based on Mozilla Firefox build system requirements
+
+# ===== BUILD ARTIFACTS =====
+# Object directories
+obj-*/
+obj/
+objdir/
+obj-x86_64-pc-linux-gnu/
+obj-aether/
+
+# Build outputs
+dist/
+_build/
+_tests/
+_virtualenv/
+
+# Compiled binaries
+*.exe
+*.dll
+*.so
+*.dylib
+*.a
+*.lib
+
+# ===== MOZILLA/FIREFOX SPECIFIC =====
+# mach state
+.mach_state/
+.mozbuild/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Test results
+_tests/
+testing/
+test-results/
+*.test
+*.log
+
+# Profiling data
+*.gcda
+*.gcno
+*.profdata
+
+# ===== DEVELOPMENT TOOLS =====
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Editor backups
+*.bak
+*.orig
+*.rej
+
+# ===== TEMPORARY FILES =====
+# System temporary files
+*.tmp
+*.temp
+.tmp/
+.temp/
+
+# Log files
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ===== DEPENDENCIES =====
+# Node.js
+node_modules/
+npm-debug.log
+yarn.lock
+package-lock.json
+
+# Python
+venv/
+env/
+.env
+.venv/
+pip-log.txt
+
+# ===== CONFIGURATION =====
+# Local configuration files
+.mozconfig.local
+mozconfig.local
+local.properties
+
+# Environment files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ===== ARCHIVES AND PACKAGES =====
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.zip
+*.rar
+*.7z
+*.dmg
+*.pkg
+*.deb
+*.rpm
+
+# ===== DOCUMENTATION BUILD =====
+docs/_build/
+docs/build/
+site/
+
+# ===== RUST (if used) =====
+target/
+Cargo.lock
+
+# ===== COVERAGE REPORTS =====
+coverage/
+.coverage
+.nyc_output/
+lcov.info
+
+# ===== SECURITY =====
+# Don&apos;t commit sensitive files
+*.key
+*.pem
+*.p12
+*.pfx
+secrets/
+.secrets/
+
+# ===== AETHER-SPECIFIC =====
+# Aether build artifacts
+aether-build/
+aether-dist/
+aether-*.tar.*
+
+# User data directories (for testing)
+profile-*/
+test-profile/
+aether-profile/
+
+# ===== KEEP THESE FILES =====
+# Force include important files that might be ignored by patterns above
+!.gitkeep
+!.gitignore
+!README.md
+!LICENSE
+!mozconfig</file><file path="LICENSE">This project is based on Mozilla Firefox (MPL 2.0).
+All Mozilla trademarks and logos are property of Mozilla Foundation.
+Aether Browser is an independent derivative and not affiliated with Mozilla.
+© 2025 Moughamir Labs under the CIL/CIEL initiative.</file><file path="mozconfig"># Aether Browser Build Configuration
+# Based on Mozilla Firefox with Aether-specific customizations
+
+# Build a browser (not Thunderbird, etc.)
+ac_add_options --enable-application=browser
+
+# Branding
+ac_add_options --with-branding=branding/aether
+
+# Optimization settings
+ac_add_options --enable-optimize
+ac_add_options --disable-debug
+ac_add_options --disable-debug-symbols
+
+# Use system libraries where possible
+ac_add_options --enable-system-ffi
+ac_add_options --enable-system-pixman
+
+# Disable unnecessary features for minimal build
+ac_add_options --disable-tests
+ac_add_options --disable-crashreporter
+ac_add_options --disable-updater
+ac_add_options --disable-maintenance-service
+
+# Enable useful features for developers
+ac_add_options --enable-devtools
+
+# Use mold linker for faster builds (if available)
+export CC=clang
+export CXX=clang++
+export LD=mold
+
+# Build directory
+mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj-aether
+
+# Parallel build
+mk_add_options MOZ_MAKE_FLAGS=&quot;-j$(nproc)&quot;
+
+# Aether-specific configurations
+ac_add_options --disable-default-browser-agent
+ac_add_options --disable-backgroundtasks
+
+# Privacy-focused defaults
+ac_add_options --disable-telemetry-reporting</file><file path="README.md"># 🧭 Aether Browser
+
+Aether Browser is a minimalist, developer-oriented fork of Mozilla Firefox — part of the **CIL/CIEL (Cognitive Internet Layer)** initiative.
+
+---
+
+## ✨ Features
+
+- **Minimalist UI** with Command Palette (VS Code-style)
+- **Tree Tabs** and Containerized Links for better organization
+- **Developer &amp; Web Research Focus** with enhanced productivity tools
+- **Native AI-assisted browsing** via Raspberry Pi 5 + Hailo NPU
+- **100% open source** under MPL 2.0, preserving Mozilla credits and trademarks
+
+---
+
+## 🧱 Build Instructions
+
+### Prerequisites (Arch Linux)
+
+Follow these steps to build Aether Browser from source:
+
+```bash
+sudo pacman -S git python nodejs clang llvm mold cbindgen rustup autoconf2.13 \
+  pkgconf gtk3 dbus-glib alsa-lib mesa libvpx nspr nss unzip zip
+rustup default stable
+```
+
+### Building from Source
+
+```bash
+git clone https://github.com/moughamir/aether-browser.git
+cd aether-browser
+
+# Set up Firefox build infrastructure (first time only)
+./scripts/setup-firefox-build.sh
+
+# Bootstrap the build environment
+./mach bootstrap --application-choice=browser
+
+# Build and run
+./scripts/build.sh
+./scripts/run-dev.sh
+```
+
+The build process uses:
+- [`scripts/setup-firefox-build.sh`](scripts/setup-firefox-build.sh) to set up Firefox build infrastructure (one-time setup)
+- [`scripts/build.sh`](scripts/build.sh) for compilation
+- [`scripts/run-dev.sh`](scripts/run-dev.sh) to launch the development version
+
+---
+
+## ⚙️ Branding &amp; Customization
+
+All Aether Browser branding assets are located in the [`branding/aether/`](branding/aether/) directory. This includes:
+
+- Application icons and logos
+- Splash screens and UI elements  
+- Brand-specific configuration files
+
+**Note**: Rebranding is required to comply with [Mozilla&apos;s trademark policy](https://www.mozilla.org/en-US/foundation/trademarks/policy/) when creating Firefox-based browsers.
+
+---
+
+## 🔬 Hardware Integration
+
+### Raspberry Pi 5 + AI Acceleration
+
+Aether Browser is optimized for Raspberry Pi 5 setups with **AI HAT+** or **AI Kit**:
+
+- **Hailo NPU**: Provides local AI inference for enhanced browsing features
+- **CIEL Integration**: Connects via `/dev/hailo` to dedicated Rust microservices
+- **Planned Features**: AI-assisted content analysis, smart bookmarking, and contextual suggestions
+
+&gt; 💡 **Coming Soon**: Full AI integration will be available in the [`src/ai/`](src/ai/) directory
+
+---
+
+## 🚀 Getting Started
+
+1. **Check Prerequisites**: Ensure you have all required dependencies installed (see [Build Instructions](#build-instructions))
+2. **Clone &amp; Build**: Follow the build steps above to compile from source
+3. **Explore Features**: Try the Command Palette (Ctrl+Shift+P) and Tree Tabs
+4. **Customize**: Modify branding and preferences to suit your workflow
+
+## 🤝 Contributing
+
+We welcome contributions to Aether Browser! Whether it&apos;s:
+- 🐛 Bug reports and fixes
+- ✨ New feature implementations  
+- 📚 Documentation improvements
+- 🎨 UI/UX enhancements
+
+Please feel free to open issues and submit pull requests.
+
+---
+
+## 🧩 Credits &amp; License
+
+**Aether Browser** is based on **Mozilla Firefox** and distributed under the [Mozilla Public License 2.0](LICENSE).
+
+- Mozilla and Firefox are trademarks of the Mozilla Foundation
+- Developed by Moughamir Labs as part of the **CIL/CIEL (Cognitive Internet Layer)** initiative
+- © 2025 All rights reserved</file><file path="SCAFFOLD.md"># Aether Browser Scaffold Structure
+
+This document describes the complete scaffold structure for Aether Browser, a Firefox-based browser fork.
+
+## 🏗️ Build System
+
+### Core Build Files
+- **`mozconfig`** - Main build configuration with Aether branding and optimizations
+- **`scripts/bootstrap.sh`** - Automated Firefox source download and setup script
+- **`.gitignore`** - Comprehensive ignore rules for Firefox build artifacts
+
+### Build Process
+1. Run `./scripts/bootstrap.sh` to download Firefox 131.0.3 source
+2. Build with `./mach build` using the configured mozconfig
+3. Package with `./mach package` to create distributable binaries
+
+## 🎨 Branding System
+
+### Branding Files (`branding/aether/`)
+- **`brand.dtd`** - Application name and branding strings
+- **`brand.properties`** - Localized branding properties
+- **`moz.build`** - Branding build configuration
+
+### Key Branding Elements
+- **Application Name**: Aether Browser
+- **Vendor**: Aether Project
+- **User Agent**: Custom Aether identification
+- **Update URLs**: Disabled (self-managed updates)
+
+## ⚙️ Configuration System
+
+### Default Preferences (`defaults/pref/aether.js`)
+- **Privacy**: Enhanced tracking protection, disabled telemetry
+- **Security**: Strengthened security defaults
+- **Performance**: Optimized caching and resource management
+- **UI**: Clean, developer-friendly interface defaults
+- **Aether Features**: Custom feature toggles
+
+## 📁 Source Structure
+
+### Core Directories
+```
+src/
+├── ai/              # AI-powered features (planned)
+├── components/      # Custom UI components
+├── themes/          # Browser themes and styling
+└── extensions/      # Built-in extensions
+```
+
+### Browser Integration (`browser/aether/`)
+- **`moz.build`** - Browser-specific build configuration
+- **`chrome.manifest`** - Chrome package registration
+- **`jar.mn`** - JAR packaging manifest
+
+## 🔧 Development Features
+
+### Planned Components
+1. **Command Palette** - VS Code-style quick actions
+2. **Tree Tabs** - Hierarchical tab organization
+3. **Enhanced DevTools** - Developer-focused improvements
+4. **AI Integration** - Smart search and content analysis
+5. **Advanced Customization** - Deep browser customization
+
+### Development Tools
+- **CSS Customization**: Enabled userChrome.css support
+- **Remote Debugging**: Enabled for development
+- **Dark Theme**: Default developer-friendly theme
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Linux/macOS/Windows development environment
+- Python 3.6+
+- Git
+- 8GB+ RAM, 40GB+ disk space
+
+### Quick Start
+```bash
+# Clone the repository
+git clone https://github.com/moughamir/aether-browser.git
+cd aether-browser
+
+# Download Firefox source and set up build environment
+./scripts/bootstrap.sh
+
+# Build Aether Browser
+./mach build
+
+# Run the browser
+./mach run
+```
+
+### Development Workflow
+1. Make changes to Aether-specific files
+2. Rebuild with `./mach build`
+3. Test with `./mach run`
+4. Package with `./mach package` for distribution
+
+## 📋 Build Configuration
+
+### Optimization Features
+- **PGO**: Profile-Guided Optimization enabled
+- **LTO**: Link-Time Optimization for smaller binaries
+- **Rust**: Optimized Rust compilation
+- **Debug**: Disabled for release builds
+- **Telemetry**: Completely disabled
+
+### Custom Features
+- **Branding**: Complete Aether Browser identity
+- **Updates**: Self-managed update system
+- **Privacy**: Enhanced privacy defaults
+- **Performance**: Optimized for speed and efficiency
+
+## 🔒 Privacy &amp; Security
+
+### Privacy Enhancements
+- Tracking protection enabled by default
+- Telemetry and data collection disabled
+- Enhanced Do Not Track headers
+- Automatic cache clearing options
+
+### Security Features
+- Strengthened security defaults
+- Disabled automatic updates (manual control)
+- Enhanced content security policies
+- Developer tools security features
+
+## 📦 Distribution
+
+### Package Types
+- **Linux**: AppImage, .deb, .rpm packages
+- **Windows**: Installer and portable versions
+- **macOS**: .dmg disk images
+
+### Release Process
+1. Build with release configuration
+2. Run automated tests
+3. Package for all platforms
+4. Sign binaries (when certificates available)
+5. Distribute through official channels
+
+## 🤝 Contributing
+
+### Development Setup
+1. Fork the repository
+2. Set up development environment with `bootstrap.sh`
+3. Make changes in feature branches
+4. Test thoroughly before submitting PRs
+5. Follow Mozilla coding standards
+
+### Code Organization
+- Keep Aether-specific code in dedicated directories
+- Follow Mozilla&apos;s build system conventions
+- Document all custom features and modifications
+- Maintain compatibility with Firefox updates
+
+---
+
+**Note**: This scaffold provides the foundation for Aether Browser development. The actual Firefox source code will be downloaded and integrated during the build process using the bootstrap script.</file></files></repomix>
